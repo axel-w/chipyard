@@ -134,3 +134,9 @@
 [submodule "generators/fft-generator"]
 	path = generators/fft-generator
 	url = https://github.com/ucb-bar/FFTGenerator.git
+[submodule "generators/customtop"]
+	path = generators/customtop
+	url = git@git.rz.uni-augsburg.de:wiedemax/customtop.git
+[submodule "generators/monitoring"]
+	path = generators/monitoring
+	url = git@git.rz.uni-augsburg.de:wiedemax/monitoring-project.git
