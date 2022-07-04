@@ -1,6 +1,7 @@
 GCC=riscv64-unknown-elf-gcc
 OBJDUMP=riscv64-unknown-elf-objdump
-CFLAGS= -std=gnu99 -O2 -fno-common -fno-builtin-printf -Wall
+# CFLAGS= -std=gnu99 -O2 -fno-common -fno-builtin-printf -Wall
+CFLAGS= -std=gnu99 -O0 -fno-common -fno-builtin-printf -Wall
 LDFLAGS= -static
 
 include libgloss.mk

@@ -75,6 +75,18 @@ ifeq ($(SUB_PROJECT),chipyard)
 	TB                ?= TestDriver
 	TOP               ?= ChipTop
 endif
+# for own custom configs
+ifeq ($(SUB_PROJECT),customtop)
+	SBT_PROJECT       ?= $(SUB_PROJECT)
+	MODEL             ?= TestHarness
+	VLOG_MODEL        ?= TestHarness
+	MODEL_PACKAGE     ?= $(SUB_PROJECT)
+	CONFIG            ?= AdderConfig
+	CONFIG_PACKAGE    ?= $(SUB_PROJECT)
+	GENERATOR_PACKAGE ?= chipyard
+	TB                ?= TestDriver
+	TOP               ?= ChipTop
+endif
 # for Hwacha developers
 ifeq ($(SUB_PROJECT),hwacha)
 	SBT_PROJECT       ?= chipyard
