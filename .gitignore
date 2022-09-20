@@ -24,3 +24,4 @@ env-esp-tools.sh
 .metals/
 .vscode/
 metals.sbt
+.conda-env/
