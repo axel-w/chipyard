@@ -81,7 +81,7 @@ ifeq ($(SUB_PROJECT),customtop)
 	MODEL             ?= TestHarness
 	VLOG_MODEL        ?= TestHarness
 	MODEL_PACKAGE     ?= $(SUB_PROJECT)
-	CONFIG            ?= AdderConfig
+	CONFIG            ?= MsgCounterConfig
 	CONFIG_PACKAGE    ?= $(SUB_PROJECT)
 	GENERATOR_PACKAGE ?= chipyard
 	TB                ?= TestDriver
@@ -245,5 +245,5 @@ sim_vsrcs = \
 #########################################################################################
 # assembly/benchmark variables
 #########################################################################################
-timeout_cycles = 10000000
+timeout_cycles = 100000000#10000000
 bmark_timeout_cycles = 100000000

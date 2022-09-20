@@ -288,6 +288,6 @@ lazy val customtop = (project in file("generators/customtop"))
   .settings(commonSettings)
   
 lazy val monitoring = (project in file("generators/monitoring"))
-  .dependsOn(rocketchip)
+  .dependsOn(rocketchip, chipyard)
   .settings(libraryDependencies ++= rocketLibDeps.value)
   .settings(commonSettings)
