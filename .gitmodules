@@ -100,6 +100,7 @@
 [submodule "generators/customtop"]
 	path = generators/customtop
 	url = git@git.rz.uni-augsburg.de:wiedemax/customtop.git
+	branch = dev-linkMonitor
 [submodule "generators/monitoring"]
 	path = generators/monitoring
 	url = git@git.rz.uni-augsburg.de:wiedemax/monitoring-project.git
