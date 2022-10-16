@@ -22,3 +22,9 @@ tags
 metals.sbt
 .conda-env/
 .#*
+CMakeFiles
+.cmake
+*.cmake
+build/Makefile
+CMakeCache.txt
+compile_commands.json
