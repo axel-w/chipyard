@@ -3596,13 +3596,13 @@ package:
     ncurses: '>=6.3,<7.0a0'
     python_abi: 3.9.* *_cp39
   hash:
-    md5: 8a574054a336665b34ffebca58dba813
+    md5: e6ff1fd50057c6780ce02bb98d999cbc
     sha256: null
   manager: conda
   name: riscv-tools
   optional: false
   platform: linux-64
-  url: https://conda.anaconda.org/ucb-bar/linux-64/riscv-tools-1.0.1-0_h1234567_gdcdbcaf.tar.bz2
+  url: https://conda.anaconda.org/axel_w/linux-64/riscv-tools-1.0.1-3_h1234567_g3f44469.tar.bz2
   version: 1.0.1
 - category: main
   dependencies:
