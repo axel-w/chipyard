@@ -43,7 +43,7 @@ do
     case $1 in
         -h | --help )
             usage 3 ;;
-        riscv-tools | esp-tools)
+        riscv-tools | esp-tools | riscv-tools-latest)
             TOOLCHAIN=$1 ;;
         -ud | --unpinned-deps )
             USE_PINNED_DEPS=false ;;
