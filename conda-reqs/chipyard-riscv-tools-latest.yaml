@@ -127,3 +127,8 @@ dependencies:
   - docutils
 
   - riscv-tools
+  # openocd dependencies:
+  - automake
+  - pkg-config
+  - libtool
+  - texinfo
