@@ -29,3 +29,8 @@ build/Makefile
 CMakeCache.txt
 compile_commands.json
 first-clone-setup-fast-log
+.bloop/
+.metals/
+project/.bloop/
+project/metals.sbt
+project/project/

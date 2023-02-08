@@ -831,6 +831,18 @@ package:
   version: 3.8.1
 - category: main
   dependencies:
+    libgcc-ng: '>=12'
+  hash:
+    md5: 5be58359dbbf568c1ec0be87e0c6cb1b
+    sha256: f6c470ba56c43e5f6c75fd28b05256fd8f5d54d76df29c0652496bf3b104ae2b
+  manager: conda
+  name: oniguruma
+  optional: false
+  platform: linux-64
+  url: https://conda.anaconda.org/conda-forge/linux-64/oniguruma-6.9.8-h166bdaf_0.tar.bz2
+  version: 6.9.8
+- category: main
+  dependencies:
     ca-certificates: ''
     libgcc-ng: '>=12'
   hash:
@@ -1124,6 +1136,20 @@ package:
   version: 4.6.0
 - category: main
   dependencies:
+    libgcc-ng: '>=12'
+    libstdcxx-ng: '>=12'
+    ncurses: '>=6.3,<7.0a0'
+  hash:
+    md5: f3530f0cfbc7b4e243cb6b8f19cd077d
+    sha256: null
+  manager: conda
+  name: firtool
+  optional: false
+  platform: linux-64
+  url: https://anaconda.org/ucb-bar/firtool/1.25.0/download/linux-64/firtool-1.25.0-0_h1234567_gd0462e7ec.conda
+  version: 1.25.0
+- category: main
+  dependencies:
     libgcc-ng: '>=7.5.0'
     libstdcxx-ng: '>=7.5.0'
     m4: ''
@@ -1154,6 +1180,19 @@ package:
   platform: linux-64
   url: https://conda.anaconda.org/conda-forge/linux-64/gcc_impl_linux-64-12.2.0-hcc96c02_19.tar.bz2
   version: 12.2.0
+- category: main
+  dependencies:
+    libgcc-ng: '>=7.5.0'
+    oniguruma: '>=6.9.3,<6.10.0a0'
+  hash:
+    md5: 8578ae83310b8c9f5717f1aa65054f36
+    sha256: 00e69aec19174e61c70b652bb62c77c0947a27d6720bda0cb8d5be654020804a
+  manager: conda
+  name: jq
+  optional: false
+  platform: linux-64
+  url: https://conda.anaconda.org/conda-forge/linux-64/jq-1.6-h36c2ea0_1000.tar.bz2
+  version: '1.6'
 - category: main
   dependencies:
     libopenblas: '>=0.3.21,<1.0a0'

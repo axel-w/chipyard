@@ -42,18 +42,21 @@ class HwachaRocketConfig extends Config(
   new chipyard.config.WithHwachaTest ++
   new hwacha.DefaultHwachaConfig ++                              // use Hwacha vector accelerator
   new freechips.rocketchip.subsystem.WithNBigCores(1) ++
+  new chipyard.config.WithSystemBusWidth(128) ++
   new chipyard.config.AbstractConfig)
 
 // DOC include start: GemminiRocketConfig
 class GemminiRocketConfig extends Config(
   new gemmini.DefaultGemminiConfig ++                            // use Gemmini systolic array GEMM accelerator
   new freechips.rocketchip.subsystem.WithNBigCores(1) ++
+  new chipyard.config.WithSystemBusWidth(128) ++
   new chipyard.config.AbstractConfig)
 // DOC include end: GemminiRocketConfig
 
 class FPGemminiRocketConfig extends Config(
   new gemmini.GemminiFP32DefaultConfig ++                         // use FP32Gemmini systolic array GEMM accelerator
   new freechips.rocketchip.subsystem.WithNBigCores(1) ++
+  new chipyard.config.WithSystemBusWidth(128) ++
   new chipyard.config.AbstractConfig)
 
 
@@ -117,6 +120,11 @@ class GPIORocketConfig extends Config(
 
 class QuadRocketConfig extends Config(
   new freechips.rocketchip.subsystem.WithNBigCores(4) ++    // quad-core (4 RocketTiles)
+  new chipyard.config.AbstractConfig)
+
+class Cloned64RocketConfig extends Config(
+  new freechips.rocketchip.subsystem.WithCloneRocketTiles(63, 0) ++ // copy tile0 63 more times
+  new freechips.rocketchip.subsystem.WithNBigCores(1) ++            // tile0 is a BigRocket
   new chipyard.config.AbstractConfig)
 
 class RV32RocketConfig extends Config(
