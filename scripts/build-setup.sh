@@ -115,6 +115,7 @@ if run_step "1"; then
     CONDA_REQS=$CYDIR/conda-reqs
     CONDA_LOCK_REQS=$CONDA_REQS/conda-lock-reqs
     LOCKFILE=$CONDA_LOCK_REQS/conda-requirements-$TOOLCHAIN_TYPE-linux-64.conda-lock.yml
+    ALT_LOCKFILE=$CONDA_LOCK_REQS/conda-requirements-monitoring-$TOOLCHAIN_TYPE-linux-64.conda-lock.yml
 
     if [ "$USE_UNPINNED_DEPS" = true ]; then
         # auto-gen the lockfile
@@ -122,7 +123,7 @@ if run_step "1"; then
     fi
 
     # use conda-lock to create env
-    conda-lock install -p $CYDIR/.conda-env $LOCKFILE
+    conda-lock install -p $CYDIR/.conda-env $ALT_LOCKFILE
 
     source $CYDIR/.conda-env/etc/profile.d/conda.sh
     conda activate $CYDIR/.conda-env
