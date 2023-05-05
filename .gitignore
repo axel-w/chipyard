@@ -36,3 +36,4 @@ project/metals.sbt
 project/project/
 .ivy2
 .sbt
+tools/cde/target/*
