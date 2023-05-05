@@ -2,14 +2,13 @@ package chipyard.config
 
 import chisel3._
 
-import freechips.rocketchip.config.{Field, Parameters, Config}
+import org.chipsalliance.cde.config.{Field, Parameters, Config}
 import freechips.rocketchip.tile._
 import freechips.rocketchip.subsystem._
 import freechips.rocketchip.rocket.{RocketCoreParams, MulDivParams, DCacheParams, ICacheParams}
 
 import boom.common.{BoomTileAttachParams}
 import cva6.{CVA6TileAttachParams}
-
 import testchipip._
 
 class WithL2TLBs(entries: Int) extends Config((site, here, up) => {
@@ -79,3 +78,4 @@ class WithRocketDCacheScratchpad extends Config((site, here, up) => {
     ))
   }
 })
+

@@ -12,7 +12,10 @@ lazy val commonSettings = Seq(
   assembly / assemblyMergeStrategy := { _ match {
     case PathList("META-INF", "MANIFEST.MF") => MergeStrategy.discard
     case _ => MergeStrategy.first}},
-  scalacOptions ++= Seq("-deprecation","-unchecked"),
+  scalacOptions ++= Seq(
+    "-deprecation",
+    "-unchecked",
+    "-Ymacro-annotations"), // fix hierarchy API
   unmanagedBase := (chipyardRoot / unmanagedBase).value,
   allDependencies := {
     // drop specific maven dependencies in subprojects in favor of Chipyard's version
@@ -59,7 +62,7 @@ def isolateAllTests(tests: Seq[TestDefinition]) = tests map { test =>
   new Group(test.name, Seq(test), SubProcess(options))
 } toSeq
 
-val chiselVersion = "3.5.5"
+val chiselVersion = "3.5.6"
 
 lazy val chiselSettings = Seq(
   libraryDependencies ++= Seq("edu.berkeley.cs" %% "chisel3" % chiselVersion,
@@ -99,18 +102,8 @@ lazy val rocketMacros  = (project in rocketChipDir / "macros")
     )
   )
 
-lazy val rocketConfig = (project in rocketChipDir / "api-config-chipsalliance/build-rules/sbt")
-  .settings(commonSettings)
-  .settings(
-    libraryDependencies ++= Seq(
-      "org.scala-lang" % "scala-reflect" % scalaVersion.value,
-      "org.json4s" %% "json4s-jackson" % "3.6.6",
-      "org.scalatest" %% "scalatest" % "3.2.0" % "test"
-    )
-  )
-
 lazy val rocketchip = freshProject("rocketchip", rocketChipDir)
-  .dependsOn(hardfloat, rocketMacros, rocketConfig)
+  .dependsOn(hardfloat, rocketMacros, cde)
   .settings(commonSettings)
   .settings(chiselSettings)
   .settings(
@@ -146,7 +139,12 @@ lazy val chipyard = (project in file("generators/chipyard"))
     gemmini, icenet, tracegen, cva6, nvdla, sodor, ibex, fft_generator,
     constellation, mempress)
   .settings(libraryDependencies ++= rocketLibDeps.value)
-  .settings(commonSettings)
+  .settings(
+    libraryDependencies ++= Seq(
+      "org.reflections" % "reflections" % "0.10.2"
+    )
+  )
+ .settings(commonSettings)
 
 lazy val mempress = (project in file("generators/mempress"))
   .dependsOn(rocketchip, midasTargetUtils)
@@ -170,7 +168,7 @@ lazy val tracegen = (project in file("generators/tracegen"))
   .settings(commonSettings)
 
 lazy val icenet = (project in file("generators/icenet"))
-  .dependsOn(testchipip, rocketchip)
+  .dependsOn(rocketchip)
   .settings(libraryDependencies ++= rocketLibDeps.value)
   .settings(commonSettings)
 
@@ -206,7 +204,7 @@ lazy val sha3 = (project in file("generators/sha3"))
   .settings(commonSettings)
 
 lazy val gemmini = (project in file("generators/gemmini"))
-  .dependsOn(testchipip, rocketchip)
+  .dependsOn(rocketchip)
   .settings(libraryDependencies ++= rocketLibDeps.value)
   .settings(chiselTestSettings)
   .settings(commonSettings)
@@ -243,16 +241,12 @@ lazy val dsptools = freshProject("dsptools", file("./tools/dsptools"))
       "org.scalacheck" %% "scalacheck" % "1.14.3" % "test",
   ))
 
-lazy val `api-config-chipsalliance` = freshProject("api-config-chipsalliance", file("./tools/api-config-chipsalliance"))
-  .settings(
-    commonSettings,
-    libraryDependencies ++= Seq(
-      "org.scalatest" %% "scalatest" % "3.0.+" % "test",
-      "org.scalacheck" %% "scalacheck" % "1.14.3" % "test",
-    ))
+lazy val cde = (project in file("tools/cde"))
+  .settings(commonSettings)
+  .settings(Compile / scalaSource := baseDirectory.value / "cde/src/chipsalliance/rocketchip")
 
 lazy val `rocket-dsp-utils` = freshProject("rocket-dsp-utils", file("./tools/rocket-dsp-utils"))
-  .dependsOn(rocketchip, `api-config-chipsalliance`, dsptools)
+  .dependsOn(rocketchip, cde, dsptools)
   .settings(libraryDependencies ++= rocketLibDeps.value)
   .settings(commonSettings)
 

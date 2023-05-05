@@ -4,7 +4,7 @@ import chisel3._
 import chisel3.util._
 import chisel3.experimental.{Analog, BaseModule, DataMirror, Direction}
 
-import freechips.rocketchip.config.{Field, Config, Parameters}
+import org.chipsalliance.cde.config.{Field, Config, Parameters}
 import freechips.rocketchip.diplomacy.{LazyModule, LazyModuleImpLike}
 import freechips.rocketchip.amba.axi4.{AXI4Bundle, AXI4SlaveNode, AXI4MasterNode, AXI4EdgeParameters}
 import freechips.rocketchip.devices.debug._
@@ -21,9 +21,9 @@ import barstools.iocell.chisel._
 
 import testchipip._
 
-import chipyard.{HasHarnessSignalReferences, HarnessClockInstantiatorKey}
-import chipyard.clocking.{HasChipyardPRCI}
-import chipyard.iobinders.{GetSystemParameters, JTAGChipIO, ClockWithFreq}
+import chipyard._
+import chipyard.clocking.{HasChipyardPRCI, ClockWithFreq}
+import chipyard.iobinders.{GetSystemParameters, JTAGChipIO}
 
 import tracegen.{TraceGenSystemModuleImp}
 import icenet.{CanHavePeripheryIceNIC, SimNetwork, NicLoopback, NICKey, NICIOvonly}
@@ -154,7 +154,7 @@ class WithSimAXIMemOverSerialTL extends OverrideHarnessBinder({
       ports.map({ port =>
 // DOC include start: HarnessClockInstantiatorEx
         withClockAndReset(th.buildtopClock, th.buildtopReset) {
-          val memOverSerialTLClockBundle = p(HarnessClockInstantiatorKey).requestClockBundle("mem_over_serial_tl_clock", memFreq)
+          val memOverSerialTLClockBundle = th.harnessClockInstantiator.requestClockBundle("mem_over_serial_tl_clock", memFreq)
           val serial_bits = SerialAdapter.asyncQueue(port, th.buildtopClock, th.buildtopReset)
           val harnessMultiClockAXIRAM = SerialAdapter.connectHarnessMultiClockAXIRAM(
             system.serdesser.get,
@@ -321,6 +321,27 @@ class WithSimSerial extends OverrideHarnessBinder({
   }
 })
 
+class WithUARTSerial extends OverrideHarnessBinder({
+  (system: CanHavePeripheryTLSerial, th: HasHarnessSignalReferences, ports: Seq[ClockedIO[SerialIO]]) => {
+    implicit val p = chipyard.iobinders.GetSystemParameters(system)
+    ports.map({ port =>
+      val freq = p(PeripheryBusKey).dtsFrequency.get
+      val bits = SerialAdapter.asyncQueue(port, th.buildtopClock, th.buildtopReset)
+      withClockAndReset(th.buildtopClock, th.buildtopReset) {
+        val ram = SerialAdapter.connectHarnessRAM(system.serdesser.get, bits, th.buildtopReset)
+        val uart_to_serial = Module(new UARTToSerial(freq, UARTParams(0)))
+        val serial_width_adapter = Module(new SerialWidthAdapter(
+          8, SerialAdapter.SERIAL_TSI_WIDTH))
+        ram.module.io.tsi_ser.flipConnect(serial_width_adapter.io.wide)
+        UARTAdapter.connect(Seq(uart_to_serial.io.uart), uart_to_serial.div)
+        serial_width_adapter.io.narrow.flipConnect(uart_to_serial.io.serial)
+        th.success := false.B
+      }
+    })
+  }
+})
+
+
 class WithTraceGenSuccess extends OverrideHarnessBinder({
   (system: TraceGenSystemModuleImp, th: HasHarnessSignalReferences, ports: Seq[Bool]) => {
     ports.map { p => when (p) { th.success := true.B } }
@@ -332,6 +353,24 @@ class WithSimDromajoBridge extends ComposeHarnessBinder({
     ports.map { p => p.traces.map(tileTrace => SimDromajoBridge(tileTrace)(system.p)) }
   }
 })
+
+class WithCospike extends ComposeHarnessBinder({
+  (system: CanHaveTraceIOModuleImp, th: HasHarnessSignalReferences, ports: Seq[TraceOutputTop]) => {
+    implicit val p = chipyard.iobinders.GetSystemParameters(system)
+    val chipyardSystem = system.asInstanceOf[ChipyardSystemModule[_]].outer.asInstanceOf[ChipyardSystem]
+    val tiles = chipyardSystem.tiles
+    val cfg = SpikeCosimConfig(
+      isa = tiles.headOption.map(_.isaDTS).getOrElse(""),
+      mem0_base = p(ExtMem).map(_.master.base).getOrElse(BigInt(0)),
+      mem0_size = p(ExtMem).map(_.master.size).getOrElse(BigInt(0)),
+      pmpregions = tiles.headOption.map(_.tileParams.core.nPMPs).getOrElse(0),
+      nharts = tiles.size,
+      bootrom = chipyardSystem.bootROM.map(_.module.contents.toArray.mkString(" ")).getOrElse("")
+    )
+    ports.map { p => p.traces.zipWithIndex.map(t => SpikeCosim(t._1, t._2, cfg)) }
+  }
+})
+
 
 class WithCustomBootPinPlusArg extends OverrideHarnessBinder({
   (system: CanHavePeripheryCustomBootPin, th: HasHarnessSignalReferences, ports: Seq[Bool]) => {
