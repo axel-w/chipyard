@@ -133,9 +133,9 @@ dependencies:
     - mypy
     - s3fs
     - aiohttp
-    # - pip:
-    #     - sure
-    #     - pylddwrap
+    - pip:
+        - sure
+        - pylddwrap
 
     # firesim ci shared packages
     - boto3
@@ -151,5 +151,5 @@ dependencies:
     - types-requests
     - azure-identity
     - fsspec
-    # - pip:
-    #     - fab-classic>=1.19.2
+    - pip:
+        - fab-classic>=1.19.2
